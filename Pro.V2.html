@@ -1,0 +1,1794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Japanese ESL Pronunciation Trainer Pro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    :root {
+      --bg-dark: #0a0e27;
+      --bg-darker: #050811;
+      --neon-cyan: #00f0ff;
+      --neon-pink: #ff006e;
+      --neon-purple: #8b5cf6;
+      --neon-blue: #3b82f6;
+      --neon-green: #10b981;
+      --neon-orange: #f59e0b;
+      --text-primary: #e0e7ff;
+      --text-secondary: #94a3b8;
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(148, 163, 184, 0.1);
+    }
+
+    body {
+      background: var(--bg-darker);
+      font-family: 'Rajdhani', sans-serif;
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: gridMove 20s linear infinite;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    @keyframes gridMove {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: 0;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--neon-cyan);
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--neon-pink);
+      bottom: -50px;
+      right: -50px;
+      animation-delay: 7s;
+    }
+
+    .orb-3 {
+      width: 350px;
+      height: 350px;
+      background: var(--neon-purple);
+      top: 50%;
+      left: 50%;
+      animation-delay: 14s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(100px, -50px) scale(1.1); }
+      66% { transform: translate(-50px, 100px) scale(0.9); }
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: slideDown 0.8s ease-out;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 3rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      margin-bottom: 10px;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: brightness(1) drop-shadow(0 0 20px rgba(0, 240, 255, 0.5)); }
+      50% { filter: brightness(1.2) drop-shadow(0 0 30px rgba(0, 240, 255, 0.8)); }
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .mode-selector {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      animation: fadeIn 1s ease-out 0.3s both;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .mode-btn {
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      border: 2px solid var(--glass-border);
+      border-radius: 15px;
+      padding: 12px 24px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mode-btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(0, 240, 255, 0.2);
+      transform: translate(-50%, -50%);
+      transition: width 0.5s, height 0.5s;
+    }
+
+    .mode-btn:hover::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .mode-btn:hover {
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(0, 240, 255, 0.3);
+    }
+
+    .mode-btn.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(139, 92, 246, 0.2));
+      border-color: var(--neon-cyan);
+      color: var(--neon-cyan);
+      box-shadow: 0 0 30px rgba(0, 240, 255, 0.4), inset 0 0 20px rgba(0, 240, 255, 0.1);
+    }
+
+    .main-content {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      animation: fadeIn 1s ease-out 0.5s both;
+    }
+
+    .panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 8px 32px rgba(0, 240, 255, 0.2);
+    }
+
+    .display-box {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.05), rgba(139, 92, 246, 0.05));
+      border: 2px solid rgba(0, 240, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px 30px;
+      text-align: center;
+      margin-bottom: 25px;
+      position: relative;
+      overflow: hidden;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-shadow: 0 0 40px rgba(0, 240, 255, 0.1);
+    }
+
+    .display-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(45deg, transparent, rgba(0, 240, 255, 0.1), transparent);
+      animation: shine 3s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+      100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+    }
+
+    .display-word {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .display-sub {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      position: relative;
+      z-index: 1;
+      margin-bottom: 8px;
+    }
+
+    .ipa-display {
+      font-family: 'Courier New', monospace;
+      font-size: 1.4rem;
+      color: var(--neon-purple);
+      background: rgba(139, 92, 246, 0.15);
+      padding: 8px 18px;
+      border-radius: 10px;
+      display: inline-block;
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      position: relative;
+      z-index: 1;
+    }
+
+    .controls {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .control-btn {
+      flex: 1;
+      min-width: 130px;
+      padding: 16px 20px;
+      border: none;
+      border-radius: 15px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .control-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .control-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .control-btn:active::after {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-play {
+      background: linear-gradient(135deg, var(--neon-cyan), var(--neon-blue));
+      color: white;
+      box-shadow: 0 5px 25px rgba(0, 240, 255, 0.4);
+    }
+
+    .btn-play:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(0, 240, 255, 0.6);
+    }
+
+    .btn-record {
+      background: linear-gradient(135deg, var(--neon-pink), #ff4d94);
+      color: white;
+      box-shadow: 0 5px 25px rgba(255, 0, 110, 0.4);
+    }
+
+    .btn-record:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(255, 0, 110, 0.6);
+    }
+
+    .btn-record.recording {
+      animation: recordPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes recordPulse {
+      0%, 100% { box-shadow: 0 5px 25px rgba(255, 0, 110, 0.4); }
+      50% { box-shadow: 0 5px 40px rgba(255, 0, 110, 0.8), 0 0 60px rgba(255, 0, 110, 0.6); }
+    }
+
+    .btn-playback {
+      background: linear-gradient(135deg, var(--neon-green), #059669);
+      color: white;
+      box-shadow: 0 5px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-playback:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(16, 185, 129, 0.6);
+    }
+
+    .btn-next {
+      background: var(--glass-bg);
+      border: 2px solid var(--neon-purple);
+      color: var(--neon-purple);
+      box-shadow: 0 5px 25px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-next:hover {
+      background: rgba(139, 92, 246, 0.1);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 35px rgba(139, 92, 246, 0.5);
+    }
+
+    .recording-viz {
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 5px;
+      padding: 30px 20px;
+      margin: 20px 0;
+      background: linear-gradient(135deg, rgba(255, 0, 110, 0.15), rgba(255, 77, 148, 0.1));
+      border: 2px solid var(--neon-pink);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 0, 110, 0.4), inset 0 0 20px rgba(255, 0, 110, 0.1);
+      position: relative;
+      overflow: hidden;
+      height: 140px;
+    }
+
+    .recording-viz::before {
+      content: 'RECORDING';
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--neon-pink);
+      letter-spacing: 3px;
+      animation: blink 1s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .recording-viz.active {
+      display: flex;
+    }
+
+    .viz-bar {
+      width: 8px;
+      background: linear-gradient(180deg, var(--neon-pink), var(--neon-cyan));
+      border-radius: 4px;
+      transition: height 0.1s ease;
+      box-shadow: 0 0 10px rgba(255, 0, 110, 0.6);
+    }
+
+    .transcription-box {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.08), rgba(139, 92, 246, 0.08));
+      border: 2px solid rgba(0, 240, 255, 0.3);
+      border-radius: 18px;
+      padding: 25px;
+      margin: 20px 0;
+      min-height: 100px;
+      display: none;
+    }
+
+    .transcription-box.active {
+      display: block;
+      animation: slideIn 0.5s ease-out;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(-15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .transcription-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .transcription-content {
+      font-size: 1.5rem;
+      line-height: 2;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+    }
+
+    .word-match {
+      display: inline-block;
+      padding: 6px 12px;
+      margin: 3px;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .word-correct {
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.2);
+      border: 2px solid var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+      animation: glowCorrect 1s ease-in-out;
+    }
+
+    .word-incorrect {
+      color: var(--neon-pink);
+      background: rgba(255, 0, 110, 0.2);
+      border: 2px solid var(--neon-pink);
+      box-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
+      animation: glowIncorrect 1s ease-in-out;
+    }
+
+    @keyframes glowCorrect {
+      0% { box-shadow: 0 0 5px rgba(0, 240, 255, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(0, 240, 255, 0.9); }
+      100% { box-shadow: 0 0 20px rgba(0, 240, 255, 0.5); }
+    }
+
+    @keyframes glowIncorrect {
+      0% { box-shadow: 0 0 5px rgba(255, 0, 110, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(255, 0, 110, 0.9); }
+      100% { box-shadow: 0 0 20px rgba(255, 0, 110, 0.5); }
+    }
+
+    .accuracy-score {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      padding: 15px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .score-label {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .score-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+    }
+
+    .pronunciation-guide {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(0, 240, 255, 0.06));
+      border: 2px solid rgba(139, 92, 246, 0.3);
+      border-radius: 18px;
+      padding: 25px;
+      margin: 20px 0;
+    }
+
+    .guide-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .guide-content {
+      display: grid;
+      gap: 12px;
+    }
+
+    .guide-item {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 12px;
+      border-left: 3px solid var(--neon-purple);
+      transition: all 0.2s ease;
+    }
+
+    .guide-item:hover {
+      background: rgba(139, 92, 246, 0.1);
+      transform: translateX(5px);
+    }
+
+    .guide-icon {
+      font-size: 1.2rem;
+      min-width: 28px;
+    }
+
+    .guide-text {
+      flex: 1;
+      line-height: 1.7;
+      color: var(--text-primary);
+    }
+
+    .guide-label {
+      font-weight: 700;
+      color: var(--neon-purple);
+      margin-right: 6px;
+    }
+
+    .feedback {
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+      border: 1px solid var(--glass-border);
+      border-left: 4px solid var(--neon-cyan);
+      border-radius: 15px;
+      padding: 20px;
+      margin-bottom: 20px;
+      min-height: 80px;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+
+    .feedback-title {
+      font-weight: 700;
+      color: var(--neon-cyan);
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .settings-row {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .accent-selector {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 20px;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+    }
+
+    .accent-selector select {
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .accent-selector select option {
+      background: var(--bg-darker);
+    }
+
+    .hint {
+      flex: 1;
+      text-align: right;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 18px;
+      margin: 30px auto;
+      max-width: 1200px;
+    }
+
+    .stat-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 25px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      border-color: rgba(0, 240, 255, 0.5);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 35px rgba(0, 240, 255, 0.3);
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--neon-cyan);
+      text-shadow: 0 0 15px rgba(0, 240, 255, 0.6);
+      margin-bottom: 8px;
+    }
+
+    .stat-label {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .content-library {
+      max-width: 1200px;
+      margin: 0 auto;
+      animation: fadeIn 1s ease-out 0.7s both;
+    }
+
+    .library-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 25px;
+      transition: all 0.3s ease;
+    }
+
+    .library-section:hover {
+      border-color: rgba(0, 240, 255, 0.3);
+      box-shadow: 0 8px 35px rgba(0, 240, 255, 0.2);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--glass-border);
+    }
+
+    .section-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mastery-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(0, 240, 255, 0.1));
+      border: 2px solid var(--neon-purple);
+      border-radius: 20px;
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--neon-purple);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .mastery-beginner { border-color: #94a3b8; color: #94a3b8; }
+    .mastery-intermediate { border-color: #3b82f6; color: #3b82f6; }
+    .mastery-advanced { border-color: #10b981; color: #10b981; }
+    .mastery-expert { border-color: #f59e0b; color: #f59e0b; }
+    .mastery-master { 
+      border-color: var(--neon-cyan); 
+      color: var(--neon-cyan);
+      box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+    }
+
+    .list-container {
+      max-height: 500px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: var(--neon-cyan) transparent;
+      padding-right: 8px;
+    }
+
+    .list-container::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .list-container::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
+    }
+
+    .list-container::-webkit-scrollbar-thumb {
+      background: var(--neon-cyan);
+      border-radius: 3px;
+    }
+
+    .list-item {
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(0, 240, 255, 0.1);
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .list-item:hover {
+      background: rgba(0, 240, 255, 0.12);
+      border-color: var(--neon-cyan);
+      transform: translateX(6px);
+      box-shadow: 0 5px 20px rgba(0, 240, 255, 0.3);
+    }
+
+    .list-item.active {
+      background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(139, 92, 246, 0.15));
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+    }
+
+    .item-text {
+      flex: 1;
+      color: var(--text-primary);
+      font-size: 1.05rem;
+    }
+
+    .item-score {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      color: var(--neon-cyan);
+      background: rgba(0, 240, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-left: 12px;
+    }
+
+    .progress-section {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 18px;
+      padding: 25px;
+      margin: 30px auto;
+      text-align: center;
+      max-width: 1200px;
+    }
+
+    .progress-header {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--neon-cyan);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 18px;
+    }
+
+    .progress-container {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 12px;
+      height: 24px;
+      overflow: hidden;
+      position: relative;
+      border: 1px solid rgba(0, 240, 255, 0.2);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple), var(--neon-pink));
+      border-radius: 12px;
+      transition: width 0.6s ease;
+      position: relative;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+    }
+
+    .progress-bar::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: progressShine 2s ease-in-out infinite;
+    }
+
+    @keyframes progressShine {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 2rem;
+      }
+      
+      .mode-selector {
+        gap: 8px;
+      }
+      
+      .mode-btn {
+        font-size: 0.75rem;
+        padding: 10px 16px;
+      }
+      
+      .controls {
+        flex-direction: column;
+      }
+      
+      .control-btn {
+        width: 100%;
+      }
+      
+      .settings-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .hint {
+        text-align: left;
+      }
+
+      .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="logo">Pronunciation Trainer</h1>
+      <p class="subtitle">For Japanese ESL Students</p>
+    </div>
+
+    <div class="mode-selector">
+      <button class="mode-btn active" data-mode="lr">L vs R</button>
+      <button class="mode-btn" data-mode="th">TH Sounds</button>
+      <button class="mode-btn" data-mode="vb">V vs B</button>
+      <button class="mode-btn" data-mode="vowels">Vowel Length</button>
+      <button class="mode-btn" data-mode="final">Final Consonants</button>
+      <button class="mode-btn" data-mode="sentences">Sentences</button>
+    </div>
+
+    <div class="main-content">
+      <div class="panel">
+        <div class="display-box">
+          <div class="display-word" id="displayMain">Ready</div>
+          <div class="display-sub" id="displaySub">Choose a category and press Play</div>
+          <div class="ipa-display" id="ipaDisplay"></div>
+        </div>
+
+        <div class="controls">
+          <button class="control-btn btn-play" id="playBtn">Play Target</button>
+          <button class="control-btn btn-record" id="recBtn">Record</button>
+          <button class="control-btn btn-playback" id="playbackBtn" disabled>Play Back</button>
+          <button class="control-btn btn-next" id="nextBtn">Next</button>
+        </div>
+
+        <div class="recording-viz" id="recordingViz">
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+          <div class="viz-bar"></div>
+        </div>
+
+        <div class="transcription-box" id="transcriptionBox">
+          <div class="transcription-label">What you said:</div>
+          <div class="transcription-content" id="transcriptionContent"></div>
+          <div class="accuracy-score" id="accuracyScore"></div>
+        </div>
+
+        <div class="pronunciation-guide" id="pronunciationGuide">
+          <div class="guide-header">
+            <span>Pronunciation Guide</span>
+          </div>
+          <div class="guide-content" id="guideContent"></div>
+        </div>
+
+        <div class="feedback" id="feedback">
+          <div class="feedback-title">Ready to Begin</div>
+          Press "Play Target" to hear the pronunciation, then "Record" to practice!
+        </div>
+
+        <div class="settings-row">
+          <div class="accent-selector">
+            <span>Accent:</span>
+            <select id="accentSelect">
+              <option value="en-US">American (US)</option>
+              <option value="en-GB">British (UK)</option>
+            </select>
+          </div>
+          <div class="hint">All audio stored in memory - No API needed</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-value" id="totalPracticed">0</div>
+        <div class="stat-label">Words Practiced</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="avgAccuracy">0%</div>
+        <div class="stat-label">Avg Accuracy</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="perfectScores">0</div>
+        <div class="stat-label">Perfect Scores</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="streak">0</div>
+        <div class="stat-label">Day Streak</div>
+      </div>
+    </div>
+
+    <div class="content-library">
+      <div class="library-section">
+        <div class="section-header">
+          <div class="section-title" id="categoryTitle">Current Category</div>
+          <div class="mastery-badge" id="masteryBadge">Beginner</div>
+        </div>
+        <div class="list-container" id="itemList"></div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">Session Progress</div>
+      <div class="progress-container">
+        <div class="progress-bar" id="progBar" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ============================================
+    // CONTENT DATABASE FOR JAPANESE ESL STUDENTS
+    // ============================================
+    
+    const CONTENT_DB = {
+      lr: {
+        title: 'L vs R Sounds',
+        tip: 'For L: touch tongue to roof of mouth. For R: tongue stays back, doesn\'t touch.',
+        items: [
+          { word: 'light', ipa: '/la?t/', guide: 'Touch tongue to roof behind teeth for L', mistake: 'Often said as "right"', score: 0 },
+          { word: 'right', ipa: '/ra?t/', guide: 'Keep tongue in middle, don\'t touch roof', mistake: 'Often said as "light"', score: 0 },
+          { word: 'rice', ipa: '/ra?s/', guide: 'Tongue curled back for R, not touching', mistake: 'Often said as "lice"', score: 0 },
+          { word: 'lice', ipa: '/la?s/', guide: 'Tongue tip touches behind front teeth', mistake: 'Often said as "rice"', score: 0 },
+          { word: 'load', ipa: '/lo?d/', guide: 'Start with tongue up for L', mistake: 'Confused with "road"', score: 0 },
+          { word: 'road', ipa: '/ro?d/', guide: 'Tongue stays back throughout', mistake: 'Confused with "load"', score: 0 },
+          { word: 'collect', ipa: '/k??lekt/', guide: 'Two L sounds: touch-release-touch', mistake: 'R sounds used instead', score: 0 },
+          { word: 'correct', ipa: '/k??rekt/', guide: 'Two R sounds: tongue back both times', mistake: 'L sounds used instead', score: 0 },
+          { word: 'belly', ipa: '/?beli/', guide: 'L sound before long E vowel', mistake: 'Said as "berry"', score: 0 },
+          { word: 'berry', ipa: '/?beri/', guide: 'R sound before long E vowel', mistake: 'Said as "belly"', score: 0 },
+          { word: 'play', ipa: '/ple?/', guide: 'Quick transition from P to L', mistake: 'Cluster difficulty', score: 0 },
+          { word: 'pray', ipa: '/pre?/', guide: 'Blend P and R together smoothly', mistake: 'Cluster difficulty', score: 0 },
+          { word: 'led', ipa: '/led/', guide: 'Short E with L sound', mistake: 'Confused with "red"', score: 0 },
+          { word: 'red', ipa: '/red/', guide: 'Short E with R sound', mistake: 'Confused with "led"', score: 0 },
+          { word: 'fly', ipa: '/fla?/', guide: 'F to L combination', mistake: 'L may be unclear', score: 0 },
+          { word: 'fry', ipa: '/fra?/', guide: 'F to R combination', mistake: 'R may be unclear', score: 0 },
+        ]
+      },
+      th: {
+        title: 'TH Sounds',
+        tip: 'Put tongue between teeth! Voiceless TH (think) = no vibration. Voiced TH (this) = vibrate.',
+        items: [
+          { word: 'think', ipa: '/ƒÆ??k/', guide: 'Tongue between teeth, blow air (voiceless)', mistake: 'Said as "sink" or "tink"', score: 0 },
+          { word: 'sink', ipa: '/s??k/', guide: 'Tongue behind teeth for S', mistake: 'Used instead of "think"', score: 0 },
+          { word: 'this', ipa: '/d?s/', guide: 'Tongue between teeth, vibrate (voiced)', mistake: 'Said as "dis" or "zis"', score: 0 },
+          { word: 'thank', ipa: '/ƒÆa?k/', guide: 'Voiceless TH, no throat vibration', mistake: 'Becomes "sank"', score: 0 },
+          { word: 'that', ipa: '/dat/', guide: 'Voiced TH, feel throat vibration', mistake: 'Becomes "dat"', score: 0 },
+          { word: 'bath', ipa: '/baƒÆ/', guide: 'TH at end, tongue still out', mistake: 'Dropped or said as "bass"', score: 0 },
+          { word: 'breathe', ipa: '/bri?d/', guide: 'Voiced TH at end', mistake: 'Confused with "breath"', score: 0 },
+          { word: 'breath', ipa: '/breƒÆ/', guide: 'Voiceless TH at end', mistake: 'Confused with "breathe"', score: 0 },
+          { word: 'three', ipa: '/ƒÆri?/', guide: 'TH plus R blend at start', mistake: 'Very difficult cluster', score: 0 },
+          { word: 'through', ipa: '/ƒÆru?/', guide: 'TH plus R plus long U', mistake: 'Often simplified wrong', score: 0 },
+          { word: 'mother', ipa: '/?m?d?r/', guide: 'Voiced TH in middle', mistake: 'Becomes D sound', score: 0 },
+          { word: 'birthday', ipa: '/?b??rƒÆde?/', guide: 'Voiceless TH in middle', mistake: 'Often dropped', score: 0 },
+          { word: 'nothing', ipa: '/?n?ƒÆ??/', guide: 'Voiceless TH in middle', mistake: 'Becomes "nussing"', score: 0 },
+          { word: 'with', ipa: '/w?ƒÆ/', guide: 'Final TH, keep tongue out', mistake: 'Often dropped', score: 0 },
+        ]
+      },
+      vb: {
+        title: 'V vs B Sounds',
+        tip: 'For V: bite lower lip with top teeth. For B: press both lips together.',
+        items: [
+          { word: 'very', ipa: '/?veri/', guide: 'Bite lower lip with top teeth', mistake: 'Said as "berry"', score: 0 },
+          { word: 'berry', ipa: '/?beri/', guide: 'Press both lips together', mistake: 'Said as "very"', score: 0 },
+          { word: 'vote', ipa: '/vo?t/', guide: 'Start with teeth on lip for V', mistake: 'Said as "boat"', score: 0 },
+          { word: 'boat', ipa: '/bo?t/', guide: 'Start with lips together for B', mistake: 'Said as "vote"', score: 0 },
+          { word: 'vest', ipa: '/vest/', guide: 'V sound then short E', mistake: 'Said as "best"', score: 0 },
+          { word: 'best', ipa: '/best/', guide: 'B sound then short E', mistake: 'Said as "vest"', score: 0 },
+          { word: 'vine', ipa: '/va?n/', guide: 'Teeth to lip for V sound', mistake: 'Confused with "bind"', score: 0 },
+          { word: 'vase', ipa: '/ve?s/', guide: 'V at start of word', mistake: 'B sound used', score: 0 },
+          { word: 'base', ipa: '/be?s/', guide: 'B at start of word', mistake: 'V sound used', score: 0 },
+          { word: 'save', ipa: '/se?v/', guide: 'V at end, teeth to lip', mistake: 'Often unclear or dropped', score: 0 },
+          { word: 'curve', ipa: '/k??rv/', guide: 'Final V sound important', mistake: 'V may be dropped', score: 0 },
+          { word: 'curb', ipa: '/k??rb/', guide: 'Final B sound important', mistake: 'Confused with "curve"', score: 0 },
+        ]
+      },
+      vowels: {
+        title: 'Vowel Length',
+        tip: 'Japanese has short vowels. English contrasts short vs long. Listen carefully!',
+        items: [
+          { word: 'bit', ipa: '/b?t/', guide: 'Very short I sound', mistake: 'Made too long', score: 0 },
+          { word: 'beat', ipa: '/bi?t/', guide: 'Long E sound, hold it', mistake: 'Made too short', score: 0 },
+          { word: 'sit', ipa: '/s?t/', guide: 'Short I vowel', mistake: 'Confused with "seat"', score: 0 },
+          { word: 'seat', ipa: '/si?t/', guide: 'Long E vowel', mistake: 'Confused with "sit"', score: 0 },
+          { word: 'ship', ipa: '/??p/', guide: 'Short I sound', mistake: 'Said as "sheep"', score: 0 },
+          { word: 'sheep', ipa: '/?i?p/', guide: 'Long E sound', mistake: 'Said as "ship"', score: 0 },
+          { word: 'fill', ipa: '/f?l/', guide: 'Short I vowel', mistake: 'Made too long', score: 0 },
+          { word: 'feel', ipa: '/fi?l/', guide: 'Long E vowel', mistake: 'Made too short', score: 0 },
+          { word: 'live', ipa: '/l?v/', guide: 'Short I (as in "living")', mistake: 'Confused with "leave"', score: 0 },
+          { word: 'leave', ipa: '/li?v/', guide: 'Long E sound', mistake: 'Confused with "live"', score: 0 },
+          { word: 'still', ipa: '/st?l/', guide: 'Short I vowel', mistake: 'Vowel length wrong', score: 0 },
+          { word: 'steel', ipa: '/sti?l/', guide: 'Long E vowel', mistake: 'Vowel length wrong', score: 0 },
+        ]
+      },
+      final: {
+        title: 'Final Consonants',
+        tip: 'Japanese often drops final consonants. English needs them clearly pronounced!',
+        items: [
+          { word: 'cat', ipa: '/kat/', guide: 'Strong T at end, tongue hits roof', mistake: 'Final T dropped', score: 0 },
+          { word: 'back', ipa: '/bak/', guide: 'Strong K at end, back of tongue up', mistake: 'Final K dropped', score: 0 },
+          { word: 'dog', ipa: '/d???/', guide: 'Hard G at end, back of tongue', mistake: 'Final G dropped', score: 0 },
+          { word: 'map', ipa: '/map/', guide: 'Close lips firmly for final P', mistake: 'Final P unclear', score: 0 },
+          { word: 'bed', ipa: '/bed/', guide: 'Tongue up for final D', mistake: 'Final D dropped', score: 0 },
+          { word: 'music', ipa: '/?mju?z?k/', guide: 'Hard K sound at end', mistake: 'Final K dropped', score: 0 },
+          { word: 'desk', ipa: '/desk/', guide: 'SK cluster at end, both sounds', mistake: 'Cluster simplified', score: 0 },
+          { word: 'asked', ipa: '/askt/', guide: 'Three consonants at end: SKT', mistake: 'Very difficult ending', score: 0 },
+          { word: 'helped', ipa: '/helpt/', guide: 'LPT ending, all three sounds', mistake: 'Cluster simplified', score: 0 },
+          { word: 'world', ipa: '/w??rld/', guide: 'RLD ending cluster', mistake: 'L or D dropped', score: 0 },
+          { word: 'sixth', ipa: '/s?ksƒÆ/', guide: 'KSTH ending very difficult', mistake: 'Multiple sounds dropped', score: 0 },
+          { word: 'fifths', ipa: '/f?fƒÆs/', guide: 'FTHS ending cluster', mistake: 'Sounds simplified', score: 0 },
+        ]
+      },
+      sentences: {
+        title: 'Full Sentences',
+        tip: 'Practice natural rhythm and linking. Focus on problem sounds in context.',
+        items: [
+          { word: 'She really likes red rice.', ipa: '', guide: 'Multiple L and R sounds in one sentence', mistake: 'L/R confusion', score: 0 },
+          { word: 'I think this is the right answer.', ipa: '', guide: 'TH sounds with R sound', mistake: 'TH becomes D or S', score: 0 },
+          { word: 'The river runs through the valley.', ipa: '', guide: 'R sounds and TH sounds together', mistake: 'Multiple sound issues', score: 0 },
+          { word: 'Very few people vote in November.', ipa: '', guide: 'Multiple V sounds', mistake: 'V becomes B', score: 0 },
+          { word: 'Please feel free to leave early.', ipa: '', guide: 'Long E vowels throughout', mistake: 'Vowel length errors', score: 0 },
+          { word: 'The cat sat on the black mat.', ipa: '', guide: 'Multiple final T sounds', mistake: 'Finals dropped', score: 0 },
+          { word: 'My brother and sister live together.', ipa: '', guide: 'Multiple TH sounds', mistake: 'TH becomes D', score: 0 },
+          { word: 'She collected the correct information.', ipa: '', guide: 'L vs R in longer words', mistake: 'L/R swapped', score: 0 },
+          { word: 'Three free trees grow near the creek.', ipa: '', guide: 'TH + R clusters', mistake: 'Clusters simplified', score: 0 },
+          { word: 'The ship sailed across the deep blue sea.', ipa: '', guide: 'Short I vs long E vowels', mistake: 'Vowel confusion', score: 0 },
+          { word: 'We walked and talked for six months.', ipa: '', guide: 'Multiple final consonants', mistake: 'Finals dropped', score: 0 },
+          { word: 'Thank you very much for everything.', ipa: '', guide: 'TH and V sounds together', mistake: 'Multiple errors', score: 0 },
+        ]
+      }
+    };
+
+    // UI Elements
+    const modeButtons = document.querySelectorAll('.mode-btn');
+    const displayMain = document.getElementById('displayMain');
+    const displaySub = document.getElementById('displaySub');
+    const ipaDisplay = document.getElementById('ipaDisplay');
+    const playBtn = document.getElementById('playBtn');
+    const recBtn = document.getElementById('recBtn');
+    const playbackBtn = document.getElementById('playbackBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const feedback = document.getElementById('feedback');
+    const progBar = document.getElementById('progBar');
+    const accentSelect = document.getElementById('accentSelect');
+    const recordingViz = document.getElementById('recordingViz');
+    const transcriptionBox = document.getElementById('transcriptionBox');
+    const transcriptionContent = document.getElementById('transcriptionContent');
+    const accuracyScore = document.getElementById('accuracyScore');
+    const pronunciationGuide = document.getElementById('pronunciationGuide');
+    const guideContent = document.getElementById('guideContent');
+    const categoryTitle = document.getElementById('categoryTitle');
+    const masteryBadge = document.getElementById('masteryBadge');
+    const itemList = document.getElementById('itemList');
+    const totalPracticed = document.getElementById('totalPracticed');
+    const avgAccuracy = document.getElementById('avgAccuracy');
+    const perfectScores = document.getElementById('perfectScores');
+    const streak = document.getElementById('streak');
+
+    // State
+    let state = {
+      mode: 'lr',
+      index: 0,
+      currentItem: null,
+      isRecording: false,
+      recordedAudio: null,
+      mediaRecorder: null,
+      audioChunks: [],
+      mediaStream: null,
+      recognition: null,
+      stats: {
+        totalPracticed: 0,
+        totalScore: 0,
+        perfectCount: 0,
+        lastDate: null
+      }
+    };
+
+    // Load stats from memory
+    try {
+      const saved = localStorage.getItem('pronunciationStats');
+      if (saved) {
+        state.stats = JSON.parse(saved);
+      }
+    } catch (e) {
+      console.log('Stats not available');
+    }
+
+    // Initialize Speech Recognition
+    function initSpeechRecognition() {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        console.log('Speech recognition not supported');
+        return null;
+      }
+      
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.lang = accentSelect.value || 'en-US';
+      
+      return recognition;
+    }
+
+    // Update stats display
+    function updateStatsDisplay() {
+      totalPracticed.textContent = state.stats.totalPracticed;
+      const avg = state.stats.totalPracticed > 0 
+        ? Math.round(state.stats.totalScore / state.stats.totalPracticed) 
+        : 0;
+      avgAccuracy.textContent = avg + '%';
+      perfectScores.textContent = state.stats.perfectCount;
+      
+      // Calculate streak
+      const today = new Date().toDateString();
+      const lastDate = state.stats.lastDate;
+      if (lastDate === today) {
+        // Already practiced today
+      } else if (lastDate) {
+        const last = new Date(lastDate);
+        const now = new Date();
+        const diffDays = Math.floor((now - last) / (1000 * 60 * 60 * 24));
+        if (diffDays === 1) {
+          // Consecutive day
+          const currentStreak = parseInt(streak.textContent) || 0;
+          streak.textContent = currentStreak + 1;
+          state.stats.lastDate = today;
+        } else if (diffDays > 1) {
+          // Streak broken
+          streak.textContent = 1;
+          state.stats.lastDate = today;
+        }
+      } else {
+        streak.textContent = 1;
+        state.stats.lastDate = today;
+      }
+      
+      // Save stats
+      try {
+        localStorage.setItem('pronunciationStats', JSON.stringify(state.stats));
+      } catch (e) {
+        console.log('Could not save stats');
+      }
+    }
+
+    // Update display
+    function updateDisplay() {
+      const category = CONTENT_DB[state.mode];
+      const item = category.items[state.index % category.items.length];
+      state.currentItem = item;
+      
+      displayMain.textContent = item.word;
+      displaySub.textContent = category.tip;
+      ipaDisplay.textContent = item.ipa || '';
+      ipaDisplay.style.display = item.ipa ? 'inline-block' : 'none';
+      
+      categoryTitle.textContent = category.title;
+      
+      // Update pronunciation guide
+      guideContent.innerHTML = `
+        <div class="guide-item">
+          <div class="guide-icon">??</div>
+          <div class="guide-text">
+            <span class="guide-label">How to say it:</span>
+            ${item.guide}
+          </div>
+        </div>
+        <div class="guide-item">
+          <div class="guide-icon">??</div>
+          <div class="guide-text">
+            <span class="guide-label">Common mistake:</span>
+            ${item.mistake}
+          </div>
+        </div>
+      `;
+      
+      // Update mastery badge
+      const categoryScores = category.items.filter(i => i.score > 0);
+      const avgScore = categoryScores.length > 0
+        ? categoryScores.reduce((sum, i) => sum + i.score, 0) / categoryScores.length
+        : 0;
+      
+      let masteryClass = 'mastery-beginner';
+      let masteryText = 'Beginner';
+      if (avgScore >= 95) {
+        masteryClass = 'mastery-master';
+        masteryText = 'Master';
+      } else if (avgScore >= 85) {
+        masteryClass = 'mastery-expert';
+        masteryText = 'Expert';
+      } else if (avgScore >= 75) {
+        masteryClass = 'mastery-advanced';
+        masteryText = 'Advanced';
+      } else if (avgScore >= 60) {
+        masteryClass = 'mastery-intermediate';
+        masteryText = 'Intermediate';
+      }
+      
+      masteryBadge.className = 'mastery-badge ' + masteryClass;
+      masteryBadge.textContent = masteryText;
+      
+      updateProgress();
+      updateItemList();
+      transcriptionBox.classList.remove('active');
+      updateStatsDisplay();
+    }
+
+    // Update progress bar
+    function updateProgress() {
+      const category = CONTENT_DB[state.mode];
+      const percent = Math.round(((state.index % category.items.length) + 1) / category.items.length * 100);
+      progBar.style.width = percent + '%';
+    }
+
+    // Update item list
+    function updateItemList() {
+      const category = CONTENT_DB[state.mode];
+      itemList.innerHTML = '';
+      
+      category.items.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'list-item' + (i === state.index % category.items.length ? ' active' : '');
+        div.innerHTML = `
+          <span class="item-text">${item.word}</span>
+          ${item.score > 0 ? `<span class="item-score">${item.score}%</span>` : ''}
+        `;
+        div.addEventListener('click', () => {
+          state.index = i;
+          updateDisplay();
+          speak(item.word);
+        });
+        itemList.appendChild(div);
+      });
+    }
+
+    // Speech synthesis
+    function speak(text) {
+      if (!('speechSynthesis' in window)) {
+        showFeedback('Error', 'Speech synthesis not supported.');
+        return;
+      }
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = accentSelect.value || 'en-US';
+      utterance.rate = 0.9;
+      utterance.pitch = 1;
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    // Mode switching
+    modeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        modeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        state.mode = btn.dataset.mode;
+        state.index = 0;
+        updateDisplay();
+        showFeedback('Category Changed', CONTENT_DB[state.mode].tip);
+      });
+    });
+
+    // Play button
+    playBtn.addEventListener('click', () => {
+      speak(state.currentItem.word);
+      showFeedback('Playing Target', 'Listen carefully to the pronunciation.');
+    });
+
+    // Next button
+    nextBtn.addEventListener('click', () => {
+      state.index++;
+      updateDisplay();
+      state.recordedAudio = null;
+      playbackBtn.disabled = true;
+    });
+
+    // Recording functions
+    async function startRecording() {
+      try {
+        showFeedback('Starting...', 'Requesting microphone access...');
+        
+        state.mediaStream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          } 
+        });
+        
+        state.mediaRecorder = new MediaRecorder(state.mediaStream);
+        state.audioChunks = [];
+        
+        state.mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            state.audioChunks.push(event.data);
+          }
+        };
+        
+        state.mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+          state.recordedAudio = URL.createObjectURL(audioBlob);
+          playbackBtn.disabled = false;
+          
+          recordingViz.classList.remove('active');
+          recBtn.classList.remove('recording');
+          recBtn.textContent = 'Record';
+          
+          if (state.mediaStream) {
+            state.mediaStream.getTracks().forEach(track => track.stop());
+            state.mediaStream = null;
+          }
+          
+          // Start speech recognition
+          transcribeRecording();
+        };
+        
+        state.mediaRecorder.start();
+        state.isRecording = true;
+        recBtn.classList.add('recording');
+        recBtn.textContent = 'Stop Recording';
+        recordingViz.classList.add('active');
+        
+        // Animate waveform
+        animateWaveform();
+        
+        showFeedback('Recording...', 'Speak clearly now!');
+        
+        setTimeout(() => {
+          if (state.isRecording) {
+            stopRecording();
+          }
+        }, 5000);
+        
+      } catch (error) {
+        console.error('Recording error:', error);
+        let errorMsg = 'Could not access microphone. ';
+        
+        if (error.name === 'NotAllowedError') {
+          errorMsg += 'Please allow microphone access in your browser settings.';
+        } else if (error.name === 'NotFoundError') {
+          errorMsg += 'No microphone detected. Please connect a microphone.';
+        } else {
+          errorMsg += error.message;
+        }
+        
+        showFeedback('Microphone Error', errorMsg);
+        cleanupRecording();
+      }
+    }
+
+    function stopRecording() {
+      if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+        state.mediaRecorder.stop();
+      }
+      state.isRecording = false;
+    }
+
+    function cleanupRecording() {
+      state.isRecording = false;
+      recBtn.classList.remove('recording');
+      recBtn.textContent = 'Record';
+      recordingViz.classList.remove('active');
+      
+      if (state.mediaStream) {
+        state.mediaStream.getTracks().forEach(track => track.stop());
+        state.mediaStream = null;
+      }
+    }
+
+    function animateWaveform() {
+      if (!state.isRecording) return;
+      
+      const bars = recordingViz.querySelectorAll('.viz-bar');
+      bars.forEach(bar => {
+        const height = 20 + Math.random() * 60;
+        bar.style.height = height + 'px';
+      });
+      
+      setTimeout(() => animateWaveform(), 100);
+    }
+
+    // Speech recognition for transcription
+    function transcribeRecording() {
+      showFeedback('Processing...', 'Analyzing your pronunciation...');
+      
+      const recognition = initSpeechRecognition();
+      if (!recognition) {
+        showFeedback('Recognition Unavailable', 'Speech recognition is not supported in this browser. You can still practice with playback!');
+        return;
+      }
+      
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript.toLowerCase().trim();
+        const confidence = event.results[0][0].confidence;
+        
+        compareTranscription(transcript, confidence);
+      };
+      
+      recognition.onerror = (event) => {
+        console.error('Recognition error:', event.error);
+        if (event.error === 'no-speech') {
+          showFeedback('No Speech Detected', 'Please try again and speak more clearly.');
+        } else if (event.error === 'network') {
+          showFeedback('Network Error', 'Speech recognition requires an internet connection. You can still practice with playback!');
+        } else {
+          showFeedback('Recognition Error', 'Could not transcribe. Try again or use playback to self-check.');
+        }
+      };
+      
+      recognition.onend = () => {
+        // Recognition complete
+      };
+      
+      // Start recognition with the recorded audio
+      // Note: Web Speech API doesn't directly support blob input
+      // So we need to use live recognition instead
+      // Let's modify approach: recognize during recording
+    }
+
+    // Better approach: Live recognition during recording
+    async function startRecordingWithRecognition() {
+      try {
+        showFeedback('Starting...', 'Requesting microphone access...');
+        
+        // Start media recorder
+        state.mediaStream = await navigator.mediaDevices.getUserMedia({ 
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true,
+            autoGainControl: true
+          } 
+        });
+        
+        state.mediaRecorder = new MediaRecorder(state.mediaStream);
+        state.audioChunks = [];
+        
+        state.mediaRecorder.ondataavailable = (event) => {
+          if (event.data.size > 0) {
+            state.audioChunks.push(event.data);
+          }
+        };
+        
+        state.mediaRecorder.onstop = () => {
+          const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+          state.recordedAudio = URL.createObjectURL(audioBlob);
+          playbackBtn.disabled = false;
+          
+          recordingViz.classList.remove('active');
+          recBtn.classList.remove('recording');
+          recBtn.textContent = 'Record';
+          
+          if (state.mediaStream) {
+            state.mediaStream.getTracks().forEach(track => track.stop());
+            state.mediaStream = null;
+          }
+        };
+        
+        // Start speech recognition simultaneously
+        const recognition = initSpeechRecognition();
+        if (recognition) {
+          recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase().trim();
+            const confidence = event.results[0][0].confidence;
+            compareTranscription(transcript, confidence);
+          };
+          
+          recognition.onerror = (event) => {
+            console.error('Recognition error:', event.error);
+            if (event.error === 'no-speech') {
+              showFeedback('No Speech Detected', 'No speech was detected. Please try again.');
+            } else if (event.error === 'network') {
+              showFeedback('Network Error', 'Recognition requires internet. You can still use playback!');
+            } else {
+              showFeedback('Recognition Error', 'Could not transcribe. Use playback to self-check.');
+            }
+            transcriptionBox.classList.remove('active');
+          };
+          
+          recognition.start();
+          state.recognition = recognition;
+        }
+        
+        state.mediaRecorder.start();
+        state.isRecording = true;
+        recBtn.classList.add('recording');
+        recBtn.textContent = 'Stop Recording';
+        recordingViz.classList.add('active');
+        
+        animateWaveform();
+        
+        showFeedback('Recording...', 'Speak clearly now!');
+        
+        setTimeout(() => {
+          if (state.isRecording) {
+            stopRecording();
+          }
+        }, 5000);
+        
+      } catch (error) {
+        console.error('Recording error:', error);
+        let errorMsg = 'Could not access microphone. ';
+        
+        if (error.name === 'NotAllowedError') {
+          errorMsg += 'Please allow microphone access in your browser settings.';
+        } else if (error.name === 'NotFoundError') {
+          errorMsg += 'No microphone detected.';
+        } else {
+          errorMsg += error.message;
+        }
+        
+        showFeedback('Microphone Error', errorMsg);
+        cleanupRecording();
+      }
+    }
+
+    function stopRecordingWithRecognition() {
+      if (state.mediaRecorder && state.mediaRecorder.state !== 'inactive') {
+        state.mediaRecorder.stop();
+      }
+      if (state.recognition) {
+        state.recognition.stop();
+      }
+      state.isRecording = false;
+    }
+
+    // Compare transcription with target
+    function compareTranscription(transcript, confidence) {
+      const target = state.currentItem.word.toLowerCase().trim();
+      
+      // Tokenize into words
+      const targetWords = target.split(/\s+/);
+      const transcriptWords = transcript.split(/\s+/);
+      
+      // Calculate accuracy
+      let correctWords = 0;
+      const maxLen = Math.max(targetWords.length, transcriptWords.length);
+      
+      let displayHTML = '';
+      
+      for (let i = 0; i < maxLen; i++) {
+        const targetWord = targetWords[i] || '';
+        const transcriptWord = transcriptWords[i] || '';
+        
+        if (targetWord && transcriptWord) {
+          const isCorrect = targetWord === transcriptWord || 
+                          (targetWord.length > 3 && transcriptWord.includes(targetWord.substring(0, 3)));
+          
+          if (isCorrect) {
+            correctWords++;
+            displayHTML += `<span class="word-match word-correct">${transcriptWord}</span> `;
+          } else {
+            displayHTML += `<span class="word-match word-incorrect">${transcriptWord}</span> `;
+          }
+        } else if (transcriptWord) {
+          displayHTML += `<span class="word-match word-incorrect">${transcriptWord}</span> `;
+        }
+      }
+      
+      const accuracy = targetWords.length > 0 
+        ? Math.round((correctWords / targetWords.length) * 100)
+        : 0;
+      
+      // Update stats
+      state.stats.totalPracticed++;
+      state.stats.totalScore += accuracy;
+      if (accuracy === 100) {
+        state.stats.perfectCount++;
+      }
+      
+      // Save score to item
+      state.currentItem.score = Math.max(state.currentItem.score, accuracy);
+      
+      // Display results
+      transcriptionContent.innerHTML = displayHTML;
+      accuracyScore.innerHTML = `
+        <span class="score-label">Accuracy:</span>
+        <span class="score-value">${accuracy}%</span>
+      `;
+      
+      transcriptionBox.classList.add('active');
+      
+      let feedbackMsg = '';
+      if (accuracy === 100) {
+        feedbackMsg = 'Perfect! Excellent pronunciation!';
+      } else if (accuracy >= 80) {
+        feedbackMsg = 'Great job! Very close to perfect.';
+      } else if (accuracy >= 60) {
+        feedbackMsg = 'Good effort! Keep practicing.';
+      } else {
+        feedbackMsg = 'Keep trying! Listen to the target again.';
+      }
+      
+      showFeedback('Results', feedbackMsg + ` You said: "${transcript}"`);
+      
+      updateStatsDisplay();
+      updateItemList();
+    }
+
+    // Record button
+    recBtn.addEventListener('click', () => {
+      if (state.isRecording) {
+        stopRecordingWithRecognition();
+      } else {
+        startRecordingWithRecognition();
+      }
+    });
+
+    // Playback button
+    playbackBtn.addEventListener('click', () => {
+      if (state.recordedAudio) {
+        const audio = new Audio(state.recordedAudio);
+        audio.play();
+        showFeedback('Playing Back', 'Listen to your pronunciation and compare!');
+      }
+    });
+
+    // Show feedback
+    function showFeedback(title, message) {
+      feedback.innerHTML = `<div class="feedback-title">${title}</div>${message}`;
+    }
+
+    // Accent change
+    accentSelect.addEventListener('change', () => {
+      const accentName = accentSelect.options[accentSelect.selectedIndex].text;
+      showFeedback('Accent Changed', `Accent set to ${accentName}.`);
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === ' ' && !state.isRecording && e.target.tagName !== 'SELECT') {
+        e.preventDefault();
+        playBtn.click();
+      }
+      if (e.key === 'r' || e.key === 'R') {
+        recBtn.click();
+      }
+      if (e.key === 'p' || e.key === 'P') {
+        if (!playbackBtn.disabled) {
+          playbackBtn.click();
+        }
+      }
+      if (e.key === 'n' || e.key === 'N') {
+        nextBtn.click();
+      }
+    });
+
+    // Cleanup on unload
+    window.addEventListener('beforeunload', () => {
+      cleanupRecording();
+      if (state.recordedAudio) {
+        URL.revokeObjectURL(state.recordedAudio);
+      }
+    });
+
+    // Initialize
+    updateDisplay();
+    updateStatsDisplay();
+  </script>
+</body>
+</html>
